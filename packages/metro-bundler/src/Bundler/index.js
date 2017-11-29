@@ -187,7 +187,7 @@ class Bundler {
       transformModuleHash,
     ];
 
-    this._getModuleId = createModuleIdFactory();
+    this._getModuleId = createModuleIdFactory(opts.projectRoots[0]);
 
     let getCacheKey = (options: mixed) => '';
     if (opts.transformModulePath) {
@@ -672,7 +672,7 @@ class Bundler {
       {dev, platform, recursive, prependPolyfills},
       bundlingOptions,
       onProgress,
-      isolateModuleIDs ? createModuleIdFactory() : this._getModuleId,
+      isolateModuleIDs ? createModuleIdFactory(this._projectRoots[0]) : this._getModuleId,
     );
     return response;
   }

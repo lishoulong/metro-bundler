@@ -12,7 +12,7 @@
 'use strict';
 const crypto = require('crypto');
 
-function createModuleIdFactory(): ({path: string}) => number {
+function createModuleIdFactory(projectRoots): ({path: string}) => number {
   const fileToIdMap = new Map();
   // let nextId = 0;
   const usedIds = {};
@@ -25,16 +25,22 @@ function createModuleIdFactory(): ({path: string}) => number {
   };
 }
 
+function getRelativePath(projectRoots, modulePath) {
+  const rex = new RegExp(projectRoots, 'g');
+  return modulePath.replace(rex, '');
+}
+
 function getModuleHashedPathId(path, usedIds){
   var len = 4;
   var hash = crypto.createHash("md5");
   hash.update(path);
-  var id = hash.digest("base64");
-  while(usedIds[id.substr(0, len)]){
+  let id = hash.digest("hex");
+  while (usedIds[id.substr(0, len)]) {
     len++;
   }
   id = id.substr(0, len);
   usedIds[id] = path;
+  id = parseInt(id, 16);
   return id;
 }
 
